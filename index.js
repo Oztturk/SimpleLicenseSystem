@@ -5,7 +5,6 @@ import * as dotenv from 'dotenv'
 
 // Routes
 import api from "./routes/api.js"
-
 const app = express();
 
 dotenv.config()
