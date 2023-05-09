@@ -10,6 +10,7 @@ import {addDaysToCustomDate,addDaysToday} from '../modules/date.js'
 import timeDiff from "../modules/timediff.js";
 import * as ip from '../modules/IP.js'
 import * as log from "../modules/logger.js"
+import * as mw from '../modules/middleware.js'
 
 const router = express.Router();
 
@@ -19,7 +20,7 @@ router.use((req, res, next) => {
 });
 
 
-router.post("/gen", async (req, res) => {
+router.post("/gen",mw.genMiddleware, async (req, res) => {
 
     if (req.body.token != process.env.ADMINKEY){
         log.logToDiscord("Someone tried generate key",
@@ -40,7 +41,7 @@ router.post("/gen", async (req, res) => {
 });
 
 //Edit this according to your preferences, I made it an IP because I will be obtaining a whitelist via IP
-router.post("/usekey", async (req,res) => {
+router.post("/usekey",mw.CheckMiddleware, async (req,res) => {
     var nkey = req.body.key;
     var check = await unClaimedKeys.findOneAndDelete({key: nkey})
 
@@ -51,7 +52,7 @@ router.post("/usekey", async (req,res) => {
 })
 
 
-router.post("/check", async (req,res) => {
+router.post("/check",mw.CheckMiddleware, async (req,res) => {
     var nkey = req.body.key;
     var check = await activeLisances.findOne({key: nkey})
 
@@ -69,7 +70,7 @@ router.post("/check", async (req,res) => {
     
 });
 
-router.post('/adddays', async (req,res) => {
+router.post('/adddays',mw.adddaysMiddleware, async (req,res) => {
     var check = await activeLisances.findOne({key: req.body.key})
 
     if (!check) return res.status(403).send("No active license found")
