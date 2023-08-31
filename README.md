@@ -1,4 +1,5 @@
 # SimpleLicenseSystem
+# I don't update this project anymore because I'm lazy :D
 
 open project folder and type
 ```
